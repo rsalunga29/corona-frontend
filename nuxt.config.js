@@ -45,6 +45,7 @@ export default {
       { rel: 'manifest', href: '/site.webmanifest' },
       { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/css/flag-icon.min.css'},
       { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css'},
+      { rel: 'stylesheet', href: 'https://unpkg.com/leaflet@1.2.0/dist/leaflet.css' },
     ]
   },
   /*
@@ -62,11 +63,13 @@ export default {
    */
   plugins: [
     '~/plugins/api-factory.js',
+    '~/plugins/filters/index.js',
     '~/plugins/vanilla-back-to-top.client.js',
     '~/plugins/vue-lazyload.client.js',
     //'~/plugins/vue-moment.client.js',
     '~/plugins/vue-sticky-directive.client.js',
     '~/plugins/vuejs-paginate.client.js',
+    '~/plugins/vue-apexcharts.client.js',
   ],
   /*
    ** Nuxt.js dev-modules
@@ -96,6 +99,7 @@ export default {
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
     'nuxt-svg-loader',
+    'nuxt-leaflet',
   ],
   /*
    ** Axios module configuration
