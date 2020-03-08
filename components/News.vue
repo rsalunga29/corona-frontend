@@ -2,29 +2,43 @@
   <a
     :href="article.url"
     target="_blank"
+    rel="noopener"
     class="p-4 border-gray-400 border border-solid rounded flex w-full relative mb-4"
   >
-    <div v-lazy:background-image="article.urlToImage"
-         class="image bg-cover bg-center bg-no-repeat"></div>
+    <div
+      v-lazy:background-image="article.urlToImage"
+      class="image bg-cover bg-center bg-no-repeat"
+    ></div>
     <div class="content w-full text-black">
-      <v-clamp autoresize :max-lines="3"
-               class="text-base font-semibold leading-normal break-normal lg:text-xl mb-1">
+      <v-clamp
+        autoresize
+        :max-lines="3"
+        class="text-base font-semibold leading-normal break-words lg:text-xl mb-1"
+        style="word-break: break-word;"
+      >
         {{ article.title }}
       </v-clamp>
-      <v-clamp autoresize :max-lines="2"
-               class="text-sm leading-snug break-normal text-gray-700 lg:text-base">
+      <v-clamp
+        autoresize
+        :max-lines="2"
+        class="text-sm leading-snug break-words text-gray-700 lg:text-base"
+        style="word-break: break-word;"
+      >
         {{ article.description }}
       </v-clamp>
-      <div class="source-date lg:mt-3"><!--{{ article.publishedAt | moment('from') }}--></div>
+      <div class="source-date mt-1 lg:mt-3">
+        {{ publishTime }}
+      </div>
     </div>
   </a>
 </template>
 
 <script>
-  import VClamp from 'vue-clamp'
+  import VClamp from 'vue-clamp';
+  import moment from 'moment';
 
   export default {
-    name: "News",
+    name: 'News',
     components: {
       VClamp
     },
@@ -34,6 +48,11 @@
         required: true
       }
     },
+    computed: {
+      publishTime() {
+        return moment(this.article.publishedAt).fromNow();
+      }
+    }
   };
 </script>
 

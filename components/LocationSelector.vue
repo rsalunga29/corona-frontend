@@ -3,10 +3,10 @@
     <div class="flex flex-wrap md:flex-no-wrap md:flex-row">
       <div class="w-full md:w-2/5 h-full mr-2 align-middle relative">
         <p class="mt-2 mb-2 text-sm font-semibold">
-          <span class="text-red-600"><i class="far fa-dot-circle blink"></i> LIVE </span>
+          <span class="text-red-600 uppercase"><i class="far fa-dot-circle blink"></i> {{ $t('Live') }}</span>
           <!-- <span v-if="numLastUpdated">[Last Update: {{new Date(numLastUpdated).toDateString()}}]</span> -->
         </p>
-        <label class="block text-s font-bold mb-2">Stats Overview</label>
+        <label class="block text-s font-bold mb-2">{{ $t('Stats Overview') }}</label>
         <button class="bg-gray-200 text-left font-bold py-2 px-4 rounded w-full flex"
                 @click="toggleOptions" v-on-clickaway="closeOptions">
           <div>
@@ -15,7 +15,7 @@
               <span class="ml-2">{{ selectedCountry.name }}</span>
             </template>
             <template v-else>
-              Select Country
+              {{ $t('Select Country') }}
             </template>
           </div>
 
@@ -37,12 +37,17 @@
         </ul>
       </div>
 
-      <stats class="flex justify-center w-full md:justify-end mt-5 md:mt-0" :confirmed=numConfirm :recovered=numHeal :deaths=numDeath />
+      <stats
+        class="flex justify-center w-full md:justify-end mt-5 md:mt-0"
+        :confirmed="confirmed"
+        :recovered="recovered"
+        :deaths="deaths"
+      />
 
     </div>
 
     <div class="block text-center md:text-right mt-6 underline text-blue-500 font-semibold">
-      <nuxt-link to="/analytics">more details</nuxt-link>
+      <nuxt-link to="/analytics">{{ $t('more details') }}</nuxt-link>
     </div>
   </div>
 </template>
@@ -82,13 +87,13 @@ export default {
       countries: [{ code: 'global', name: 'Global'}, ...countries],
       global: {
         code: 'global',
-        name: 'Global',
+        name: this.$t('Global'),
       },
       selectedCountry: null,
       optionsShowed: false,
-      numDeath: 0,
-      numConfirm: 0,
-      numHeal: 0,
+      deaths: 0,
+      confirmed: 0,
+      recovered: 0,
       numLastUpdated: null,
     };
   },
@@ -114,10 +119,10 @@ export default {
         country_code: country.code,
       } : null;
 
-      this.$router.push({
+      this.$router.push(this.localePath({
         path: '/',
         query,
-      });
+      }));
     },
     checkForPresetCountryCode() {
       const { country_code: countryCode } = this.$route.query;
@@ -127,13 +132,13 @@ export default {
       this.closeOptions();
     },
     loadStats() {
-      const selectedCountry = !this.selectedCountry || this.selectedCountry.code === 'global' ? '' : this.selectedCountry.name;
+      const selectedCountryCode = !this.selectedCountry || this.selectedCountry.code === 'global' ? '' : this.selectedCountry.code;
 
-      this.$api.stats.getStats(selectedCountry)
+      this.$api.stats.getStats(selectedCountryCode)
         .then(data => {
-          this.numDeath = data.num_dead;
-          this.numConfirm = data.num_confirm;
-          this.numHeal = data.num_heal;
+          this.deaths = data.deaths;
+          this.confirmed = data.confirmed;
+          this.recovered = data.recovered;
           this.numLastUpdated = data.agg_date;
         });
     },

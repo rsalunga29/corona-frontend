@@ -25,19 +25,19 @@
             color="red">
             <l-popup>
               <p class="text-xs">
-                <span class="font-bold">Country:</span> {{ loc.country }}
+                <span class="font-bold">{{ $t('Country') }}:</span> {{ loc.countryName }}
               </p>
 
               <p class="text-xs">
-                <span class="font-bold">Total Confirmed:</span> {{ parseInt(loc.total_confirmed).toLocaleString() }}
+                <span class="font-bold">{{ $t('Total Confirmed') }}:</span> {{ loc.confirmed | formatNumber }}
               </p>
 
               <p class="text-xs">
-                <span class="font-bold">Total Recovered:</span> {{ parseInt(loc.total_recovered).toLocaleString() }}
+                <span class="font-bold">{{ $t('Total Recovered') }}:</span> {{ loc.recovered | formatNumber }}
               </p>
 
               <p class="text-xs">
-                <span class="font-bold">Total Dead:</span> {{ parseInt(loc.total_dead).toLocaleString() }}
+                <span class="font-bold">{{ $t('Total Deaths') }}:</span> {{ loc.deaths | formatNumber }}
               </p>
             </l-popup>
           </l-circle-marker>
@@ -45,8 +45,8 @@
       </client-only>
     </div>
 
-    <div class="mt-3" style="max-height: 30rem; overflow: scroll;">
-      <table class="table-fixed w-full border">
+    <div class="mt-3" style="max-height: 36.3rem; overflow: auto;">
+      <!--<table class="table-fixed w-full border">
         <thead class="text-xs text-center font-bold leading-tight">
           <tr>
             <td class="border">Country</td>
@@ -64,18 +64,50 @@
             <td class="border px-1 py-2">{{ parseInt(loc.total_dead).toLocaleString() }}</td>
           </tr>
         </tbody>
+      </table>-->
+
+      <table class="table-auto w-full">
+        <thead class="text-xs leading-tight border-b-2">
+        <tr>
+          <th class="border px-2 py-2">{{ $t('Country') }}</th>
+          <th class="border px-1 py-2">{{ $t('Total Confirmed') }}</th>
+          <th class="border px-1 py-2">{{ $t('Total Recovered') }}</th>
+          <th class="border px-1 py-2">{{ $t('Total Deaths') }}</th>
+        </tr>
+        </thead>
+        <tbody class="font-bold">
+        <tr v-for="loc in countries" :key="loc.countryName">
+          <td class="bg-gray-200 text-xs border px-2 py-2">
+            <Flag :country-code="loc.countryCode"></Flag>
+            {{loc.countryName}}<a v-if="loc.countryName === 'Others'" href="#notes-on-others">*</a>
+          </td>
+          <td class="text-center border px-1 py-2">{{ loc.confirmed | formatNumber }}</td>
+          <td class="text-center border px-1 py-2">{{ loc.recovered | formatNumber }}</td>
+          <td class="text-center border px-1 py-2">{{ loc.deaths | formatNumber }}</td>
+        </tr>
+        </tbody>
       </table>
+      <div class="my-2 font-bold text-xs text-gray-600 leading-tight">
+        * {{ $t('Cases identified on a cruise ship currently in Japanese territorial waters.') }}
+        <a name="notes-on-others" class="anchor"></a>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Flag from '~/components/Flag';
+
 export default {
   props: {
     data: {
       type: Array,
       default: null,
     }
+  },
+
+  components: {
+    Flag,
   },
 
   data () {
@@ -89,9 +121,9 @@ export default {
 
   computed: {
     countries () {
-      return this.data.filter(i => i.total_confirmed).map(item => ({
+      return this.data.filter(i => i.confirmed).map(item => ({
         ...item,
-        radius: this.scale(item.total_confirmed)
+        radius: this.scale(item.confirmed)
       }))
     },
   },

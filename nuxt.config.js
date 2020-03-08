@@ -18,7 +18,7 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: 'One stop platform for data and news related to 2019-nCov'
+        content: 'One stop platform for data and news related to COVID-19'
       },
       { name: 'msapplication-TileColor', content: '#da532c' },
       { name: 'theme-color', content: '#ffffff' },
@@ -27,14 +27,14 @@ export default {
       { property: 'og:type', content: 'website' },
       { property: 'og:url', content: 'https://www.coronatracker.com/' },
       { property: 'og:title', content: 'Corona Tracker' },
-      { property: 'og:description', content: 'One stop platform for data and news related to 2019-nCov' },
+      { property: 'og:description', content: 'One stop platform for data and news related to COVID-19' },
       { property: 'og:image', content: 'https://www.coronatracker.com/og-corona.png' },
 
       // Twitter
       { property: 'twitter:card', content: 'https://www.coronatracker.com/og-corona.png' },
       { property: 'twitter:url', content: 'https://www.coronatracker.com/' },
       { property: 'twitter:title', content: 'Corona Tracker' },
-      { property: 'twitter:description', content: 'One stop platform for data and news related to 2019-nCov' },
+      { property: 'twitter:description', content: 'One stop platform for data and news related to COVID-19' },
       { property: 'twitter:image', content: 'https://www.coronatracker.com/og-corona.png' },
     ],
     link: [
@@ -64,7 +64,6 @@ export default {
   plugins: [
     '~/plugins/api-factory.js',
     '~/plugins/filters/index.js',
-    '~/plugins/vanilla-back-to-top.client.js',
     '~/plugins/vue-lazyload.client.js',
     //'~/plugins/vue-moment.client.js',
     '~/plugins/vue-sticky-directive.client.js',
@@ -100,13 +99,30 @@ export default {
     '@nuxtjs/dotenv',
     'nuxt-svg-loader',
     'nuxt-leaflet',
+    'nuxt-i18n',
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: process.env.API_BASE_URL + process.env.API_PATH || 'http://localhost:3000',
+    baseURL: process.env.API_BASE_URL || 'http://localhost:3000',
+  },
+  /* i18n module configuration */
+  i18n: {
+    locales: [
+      {
+        code: 'en',
+        file: 'en.js',
+      },
+      {
+        code: 'ms',
+        file: 'ms.js',
+      }
+    ],
+    defaultLocale: 'en',
+    lazy: true,
+    langDir: 'lang/'
   },
   /*
    ** Build configuration

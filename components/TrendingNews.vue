@@ -1,6 +1,23 @@
 <template>
   <div ref="trending-news">
-    <Card title="Verified News"></Card>
+    <div class="flex flex-wrap">
+      <Card :title="$t('Verified News')" class="w-1/2"></Card>
+      <div
+        class="w-1/2 flex flex-wrap mt-2"
+        style="justify-content:flex-end; align-items:center"
+      >
+        <iframe
+          src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fcoronatracker%2F&width=174&layout=button_count&action=like&size=large&share=true&height=46&appId"
+          width="174"
+          height="46"
+          style="border:none;overflow:hidden"
+          scrolling="no"
+          frameborder="0"
+          allowTransparency="true"
+          allow="encrypted-media"
+        ></iframe>
+      </div>
+    </div>
     <multi-select
       v-model="selectedLanguages"
       :options="languages"
@@ -24,25 +41,25 @@
           :page-count="pageCount"
           :page-range="5"
           :click-handler="onClickPagination"
-          prev-text="Prev"
-          next-text="Next"
+          :prev-text="$t('Prev')"
+          :next-text="$t('Next')"
           container-class="pagination"
           page-class=""
         >
         </paginate>
       </template>
       <template v-else>
-        <div class="my-8 mx-auto text-center">No result</div>
+        <div class="my-8 mx-auto text-center">{{ $t('No result') }}</div>
       </template>
     </Loading>
   </div>
 </template>
 <script>
-  import Card from "~/components/Card";
-  import Loading from "~/components/Loading";
-  import News from "~/components/News";
-  import MultiSelect from "~/components/MultiSelect";
-  import { imageProxy } from "~/utils/imageProxy";
+  import Card from '~/components/Card';
+  import Loading from '~/components/Loading';
+  import News from '~/components/News';
+  import MultiSelect from '~/components/MultiSelect';
+  import { imageProxy } from '~/utils/imageProxy';
 
   export default {
     components: {
@@ -65,12 +82,19 @@
         numberTotalItems: 0,
         ajax: null,
         languages: [
-          { id: "en", name: "English" },
-          { id: "ms", name: "Bahasa Melayu" },
-          // { id: "zh", name: "简体中文" },
-          { id: "zh_TW", name: "繁體中文" }
+          { id: 'en', name: 'English' },
+          { id: 'ms', name: 'Bahasa Melayu' },
+          { id: "zh_CN", name: "简体中文" },
+          { id: 'zh_TW', name: '繁體中文' },
+          { id: 'ja', name: '日本語' },
+          { id: 'id', name: 'Bahasa Indonesia' },
+          { id: 'vi', name: 'Tiếng Việt' },
+          { id: 'th', name: 'ภาษาไทย' },
+          { id: 'ko', name: '코리언' },
+          { id: 'it', name: 'Italiano' },
+          { id: 'de', name: 'Deutsch' }
         ],
-        selectedLanguages: ["en"]
+        selectedLanguages: ['en']
       };
     },
     mounted() {
@@ -101,15 +125,15 @@
               offset,
               countryCode: this.country.code,
               country: this.country.name,
-              language: this.selectedLanguages.join(",")
+              language: this.selectedLanguages.join(',')
             })
-            .then(data => {
+            .then((data) => {
               this.articles =
                 data.items &&
-                data.items.map(news => {
+                data.items.map((news) => {
                   if (
                     news.urlToImage &&
-                    news.urlToImage.indexOf("http://") > -1
+                    news.urlToImage.indexOf('http://') > -1
                   ) {
                     news.urlToImage = imageProxy(news.urlToImage);
                   }
@@ -125,15 +149,18 @@
       },
       scrollToTop() {
         // https://plainjs.com/javascript/styles/get-the-position-of-an-element-relative-to-the-document-24/
-        const offset = el => {
+        const offset = (el) => {
           const rect = el.getBoundingClientRect();
           const scrollLeft =
             window.pageXOffset || document.documentElement.scrollLeft;
           const scrollTop =
             window.pageYOffset || document.documentElement.scrollTop;
-          return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
+          return {
+            top: rect.top + scrollTop,
+            left: rect.left + scrollLeft
+          };
         };
-        const trendingNewsDiv = this.$refs["trending-news"];
+        const trendingNewsDiv = this.$refs['trending-news'];
         const navBarHeight = 46;
         const offsetY = 16; // additional offset for aesthetic
 
@@ -142,7 +169,7 @@
             ? offset(trendingNewsDiv).top - navBarHeight - offsetY
             : 0,
           left: 0,
-          behavior: "smooth"
+          behavior: 'smooth'
         });
       }
     }

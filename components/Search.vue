@@ -13,10 +13,11 @@
         type="text"
         style="border:none"
         class="appearance-none block w-full text-gray-700 border py-3 px-4 leading-tight outline-none focus:bg-white "
-        placeholder="Search..."
+        :placeholder="$t('Search') + '...'"
       />
       <button
         class="h-12 w-12 flex items-center justify-center"
+        aria-label="search"
         v-on:click="search"
       >
         <svg
@@ -45,6 +46,7 @@
         :key="result.nid"
         :href="result.url"
         target="_blank"
+        rel="noopener"
         class="w-full result-link"
       >
         <v-clamp autoresize :max-lines="2" class="p-4">
@@ -56,7 +58,7 @@
       v-else-if="state === 'done' && !results.length"
       class="flex flex-col w-full overflow-auto bg-white text-black shadow-md list p-4"
     >
-      We could not found anything
+      Sorry. No search results found.
     </div>
     <div
       v-else-if="state === 'loading'"
@@ -68,7 +70,7 @@
       v-else-if="state == 'error'"
       class="flex flex-col w-full overflow-auto bg-white text-black shadow-md list p-4"
     >
-      Could not perform search request
+      Could not perform search request.
     </div>
   </div>
 </template>
@@ -110,6 +112,12 @@
             console.log(err);
             this.state = 'error';
           });
+
+        this.$ga.event({
+          eventCategory: 'News',
+          eventAction: 'search',
+          eventLabel: this.term,
+        });
       },
       typedSearch: function() {
         this.state = 'idle';

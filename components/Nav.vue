@@ -1,6 +1,6 @@
 <template>
   <nav v-sticky class="flex items-center flex-wrap bg-white text-primary">
-    <div class="container items-center font-bold text-lg">
+    <div class="container py-2 px-2 items-center font-bold text-lg">
       <div class="w-full flex items-center justify-between -my-2">
         <logo class="lg:flex"/>
         <div class="flex">
@@ -8,9 +8,9 @@
             v-for="link in links"
             :key="link.name"
             class="mx-1 px-3 py-4 hidden lg:block nav-link"
-            :to="{ name: link.name }"
+            :to="localePath(link.name)"
           >
-            {{ link.display }}
+            {{ $t(link.display) }}
           </nuxt-link>
         </div>
         <!--div class="capitalize">{{ currentPageName }}</div-->
@@ -18,7 +18,9 @@
           id="hamburger"
           class="lg:hidden flex self-center items-center px-3 py-2 border rounded text-primary border-primary
           hover:text-red-600 hover:border-red-600 self-end"
-          @click="showMobileLinks = !showMobileLinks">
+          @click="showMobileLinks = !showMobileLinks"
+          aria-label="Menu"
+        >
           <svg class="fill-current h-3 w-3" viewBox="0 0 20 20">
             <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/>
           </svg>
@@ -30,10 +32,10 @@
         v-for="link in links"
         :key="`mob-${link.name}`"
         class="py-2 block hover:text-red-600 text-center lg:hidden"
-        :to="{ name: link.name }"
+        :to="localePath(link.name)"
         @click.native="showMobileLinks = false"
       >
-        {{ link.display }}
+        {{ $t(link.display) }}
       </nuxt-link>
     </div>
   </nav>
@@ -56,12 +58,12 @@
     data: function() {
       return {
         links: [
-          { name: "index", display: "Home" },
-          { name: "causes", display: "What is 2019-nCov" },
-          { name: "prevention", display: "Prevention" },
-          { name: "sources", display: "Sources" },
-          { name: "analytics", display: "Analytics" },
-          { name: "about", display: "About" }
+          { name: "index", display: 'menu.Home' },
+          { name: "travel-alert", display: "menu.Travel Alert" },
+          { name: "causes", display: "menu.What is COVID-19" },
+          { name: "prevention", display: "menu.Prevention" },
+          { name: "analytics", display: "menu.Analytics" },
+          { name: "about", display: 'menu.About' }
         ],
         showMobileLinks: false,
       }
